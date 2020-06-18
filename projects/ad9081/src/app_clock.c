@@ -77,11 +77,15 @@ int32_t app_clock_init(struct clk dev_refclk[MULTIDEVICE_INSTANCE_COUNT])
 	int32_t ret;
 
 	struct xil_spi_init_param xil_spi_param = {
+#ifdef PLATFORM_MB
 		.type = SPI_PL,
+#else
+		.type = SPI_PS,
+#endif
 #ifdef QUAD_MXFE
 		.device_id = SPI_2_DEVICE_ID,
 #else
-		.device_id = SPI_DEVICE_ID,
+		.device_id = CLK_SPI_DEVICE_ID,
 #endif
 	};
 
@@ -171,7 +175,11 @@ int32_t app_clock_init(struct clk dev_refclk[MULTIDEVICE_INSTANCE_COUNT])
 	};
 
 	struct xil_gpio_init_param xil_gpio_param = {
+#ifdef PLATFORM_MB
 		.type = GPIO_PL,
+#else
+		.type = GPIO_PS,
+#endif
 		.device_id = GPIO_DEVICE_ID
 	};
 	struct gpio_init_param gpio_adrf5020_ctrl = {
@@ -192,6 +200,10 @@ int32_t app_clock_init(struct clk dev_refclk[MULTIDEVICE_INSTANCE_COUNT])
 #else
 	struct hmc7044_chan_spec chan_spec[] = {
 		{
+			.num = 0,		// CORE_CLK_RX
+			.divider = 12,		// 250 MHz
+			.driver_mode = 2,	// LVDS
+		}, {
 			.num = 2,		// DEV_REFCLK
 			.divider = 12,		// 250 MHz
 			.driver_mode = 2,	// LVDS
@@ -205,6 +217,10 @@ int32_t app_clock_init(struct clk dev_refclk[MULTIDEVICE_INSTANCE_COUNT])
 			.driver_mode = 2,	// LVDS
 		}, {
 			.num = 8,		// CORE_CLK_RX
+			.divider = 6,		// 500 MHz
+			.driver_mode = 2,	// LVDS
+		}, {
+			.num = 10,		// CORE_CLK_RX_ALT
 			.divider = 12,		// 250 MHz
 			.driver_mode = 2,	// LVDS
 		}, {
