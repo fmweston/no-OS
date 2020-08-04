@@ -707,7 +707,7 @@ static int32_t ad9081_setup(struct ad9081_phy *phy)
 	mdelay(10);
 
 	if (phy->jesd_rx_clk) {
-		mdelay(10);
+		mdelay(850);
 		ret = clk_enable(phy->jesd_rx_clk);
 		if (ret < 0) {
 			printf("Failed to enable JESD204 link: %"PRId32"\n", ret);
